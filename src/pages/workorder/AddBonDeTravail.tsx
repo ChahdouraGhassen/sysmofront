@@ -1,5 +1,5 @@
 //---------------------- import ----------------------------
-import { FC,useState } from 'react';
+import { FC,useState,useEffect } from 'react';
 import {
   Button,
   Container,
@@ -14,85 +14,59 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import AddIcon  from '@mui/icons-material/Add';
-//----------------------import pages---------------------------
-//------------------------------ Listes Matricules --------------------------
-const matricules = [
-    {
-      value: '122tu4523',
-      label: '122tu4523'
-    }
-  ];
-  //--------------------------------End Listes Type-----------------------------
-  // -------------------------------Listes Mécaniciens ------------------------
-  const mecaniciens = [
-    {
-      value: 'mecaniciens',
-      label: 'mecaniciens'
-    }
-  ];
-  //--------------------------------End Listes Mécaniciens-----------------------------
-  // -------------------------------Listes  Taches ------------------------
-  const taches = [
-    {
-      value: 'tollier',
-      label: 'tollier'
-    }
-  ];
-  //--------------------------------End Listes taches-----------------------------
-  // -------------------------------Listes Chauffeurs ------------------------
-  const chauffeurs = [
-    {
-      value: 'Chauffeurs',
-      label: 'Chauffeurs'
-    },
-    {
-      value: 'Chauffeurs',
-      label: 'Chauffeurs'
-    }
-  ];
-  //--------------------------------End Listes Chauffeurs-----------------------------
-  // -------------------------------Pieces ------------------------
-  const pieces = [
-    {
-      value: 'test',
-      label: 'test'
-    }
-  ];
-//--------------------------------End Pieces-----------------------------
-//-------------------------------qte---------------------
-const quantites = [
-    {
-      value: '15',
-      label: '15'
-    }
-  ];
-//----------------------------------------
-const AddBonDeTravail : FC =()=>{
-    //------------------------
-  const [matricule, setMatricule] = useState('1400tu122');
-  const [mecanicien,setMecanicien] = useState('mecaniciens');
-  const [tache,setTache] = useState('Clients');
-  const [piece,setPiece] = useState('Chauffeurs');
-  const [quantite,setQuantite] = useState('processing');
-  const [chauffeur,setChauffeur] = useState('processing');
 
-  //------------------------
-  const handleChange = (event) => {
-    setMatricule(event.target.value);
-  };
-  const handleChangeM = (event) => {
-    setMecanicien(event.target.value);
-  };
-  const handleChangeC = (event) => {
-    setTache(event.target.value);
-  };
-  const handleChangeCh= (event) => {
-    setPiece(event.target.value);
-  };
-  const handleChangeE= (event) => {
-    setQuantite(event.target.value);
-  };
-//---------------------------------------------------
+const AddBonDeTravail : FC =()=>{
+
+  const [chauf,setChauf]=useState([])
+  useEffect(()=>
+  {
+      fetch('https://localhost:44339/api/chauffeur')
+      .then(response=>response.json())
+      .then(data=>{
+       setChauf(data);
+
+  });
+},[]);
+const [matricule,setMatricule]=useState([])
+  useEffect(()=>
+  {
+      fetch('https://localhost:44339/api/matricule')
+      .then(response=>response.json())
+      .then(data=>{
+        setMatricule(data);
+
+  });
+},[]);
+const [mecanicien,setMecanicien]=useState([])
+  useEffect(()=>
+  {
+      fetch('https://localhost:44339/api/mecanicien')
+      .then(response=>response.json())
+      .then(data=>{
+      setMecanicien(data);
+
+  });
+},[]);
+const [piece,setPiece]=useState([])
+  useEffect(()=>
+  {
+      fetch('https://localhost:44339/api/piece')
+      .then(response=>response.json())
+      .then(data=>{
+        setPiece(data);
+
+  });
+},[]);
+const [type,setType]=useState([])
+  useEffect(()=>
+  {
+      fetch('https://localhost:44339/api/typereparation')
+      .then(response=>response.json())
+      .then(data=>{
+        setType(data);
+
+  });
+},[]);
 return(
 <>  
       <Container >
@@ -121,9 +95,9 @@ return(
                       label="matricule"
                       helperText="Please select Matricules"
                     >
-                      {matricules.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
+                      {matricule.map((mat) => (
+                        <MenuItem key={mat.MatriculeID} value={mat.NumeroMatricule}>
+                          {mat.NumeroMatricule}
                         </MenuItem>
                       ))}
                     </TextField>
@@ -131,64 +105,52 @@ return(
                       id="select-chauffeur"
                       select
                       label="Chauffeurs"
-                      value={chauffeur}
-                      onChange={handleChangeM}
                       helperText="Please select Chauffeurs"
                     >
-                      {chauffeurs.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
+                      {chauf.map((chau) => (
+                        <MenuItem key={chau.ChauffeurId} value={chau.NomChauffeur}>
+                          {chau.NomChauffeur}
                         </MenuItem>
                       ))}
-                    </TextField>
-                    </div>
-                    <div>
-                    <TextField
-                      id="select-Mecanicien"
-                      select
-                      label="Mecanicien"
-                      value={mecanicien}
-                      onChange={handleChange}
-                      helperText="Please select your Matricule"                    >
-                      {mecaniciens.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </TextField>   
+                    </TextField> 
                     <TextField
                       id="Pieces"
                       select
                       label="Pieces"
                       value={piece}
-                      onChange={handleChangeCh}
-                      helperText="Please select your Chauffeur"                    >
-                      {pieces.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
+                      helperText="Please select Piece ">
+                      {piece.map((pie) => (
+                        <MenuItem key={pie.PieceID} value={pie.NamePiece}>
+                          {pie.NamePiece}
                         </MenuItem>
                       ))}
                     </TextField>
-                     <TextField
-                      id="Quantite"
-                      type="number" >                   
-                    </TextField>
+                    
                   </div>
                   <div>
                     <TextField
                       id="filled-select-tache"
                       select
                       label="tache"
-                      value={tache}
-                      onChange={handleChangeC}
                       helperText="Please select tache"
                     >
-                      {taches.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
+                      {type.map((ty) => (
+                        <MenuItem key={ty.TypeID} value={ty.NameTypeReparation}>
+                          {ty.NameTypeReparation}
                         </MenuItem>
                       ))}
                     </TextField>
+                    <TextField
+                      id="select-Mecanicien"
+                      select
+                      label="Mecanicien"
+                      helperText="Please select Mecanicien"                    >
+                      {mecanicien.map((mec) => (
+                        <MenuItem key={mec.MecanicienID} value={mec.NameMecanicien}>
+                          {mec.NameMecanicien}
+                        </MenuItem>
+                      ))}
+                    </TextField>  
                                  {/* Button ADD taches*/} 
                     <IconButton  sx={{ margin: 2 }}color='error'>
                       <AddIcon/>

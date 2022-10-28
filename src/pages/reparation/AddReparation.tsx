@@ -1,5 +1,4 @@
 import { FC,useState,useEffect } from 'react';
-import axios from 'axios';
 import {
   Button,
   Container,
@@ -20,55 +19,68 @@ import AddMatricule from './modal/AddMatricule';
 import AddMecanicien from './modal/AddMecanicien';
 import AddClient from './modal/AddClient';
 import AddChauffeur from './modal/AddChauffeur';
-//------------------------------ DATA --------------------------
-const types = [
-  {
-    value: 'Vidange',
-    label: 'Vidange'
-  },
-  {
-    value: 'Mécanique',
-    label: 'Mécanique'
-  }
-];
 
-//--------------------------------End Listes Type-----------------------------
-// -------------------------------Listes Mécaniciens ------------------------
-const mecaniciens = [
+const AddReparation : FC =()=> {
+  const [chauf,setChauf]=useState([])
+  useEffect(()=>
   {
-    value: 'mecaniciens',
-    label: 'mecaniciens'
-  },
-  {
-    value: 'Mécanique',
-    label: 'Mécanique'
-  }
-];
-//--------------------------------End Listes Mécaniciens-----------------------------
+      fetch('https://localhost:44339/api/chauffeur')
+      .then(response=>response.json())
+      .then(data=>{
+       setChauf(data);
 
-// -------------------------------Etat ------------------------
-const etats = [
+  });
+},[]);
+  const [matricule,setMatricule]=useState([])
+  useEffect(()=>
   {
-    value: 'processing',
-    label: 'processing'
-  },
+      fetch('https://localhost:44339/api/matricule')
+      .then(response=>response.json())
+      .then(data=>{
+        setMatricule(data);
+
+  });
+},[]);
+//---------------------------
+const [type,setType]=useState([])
+  useEffect(()=>
   {
-    value: 'inprogress',
-    label: 'in progress'
-  }
-  ,
+      fetch('https://localhost:44339/api/typereparation')
+      .then(response=>response.json())
+      .then(data=>{
+        setType(data);
+
+  });
+},[]);
+const [mecanicien,setMecanicien]=useState([])
+  useEffect(()=>
   {
-    value: 'completed',
-    label: 'completed'
-  }
-];
-//--------------------------------End Etat-----------------------------
-const AddReparation : FC =(props:any)=> {
-  //------------------------
-  const [mecanicien,setMecanicien] = useState('mecaniciens');
-  const [client,setClient] = useState('Clients');
-  const [chauffeur,setChauffeur] = useState('Chauffeurs');
-  const [etat,setEtat] = useState('processing');
+      fetch('https://localhost:44339/api/mecanicien')
+      .then(response=>response.json())
+      .then(data=>{
+      setMecanicien(data);
+
+  });
+},[]);
+const [client,setClient]=useState([])
+  useEffect(()=>
+  {
+      fetch('https://localhost:44339/api/client')
+      .then(response=>response.json())
+      .then(data=>{
+      setClient(data);
+  });
+},[]);
+const [etat,setEtat]=useState([])
+  useEffect(()=>
+  {
+      fetch('https://localhost:44339/api/etat')
+      .then(response=>response.json())
+      .then(data=>{
+      setEtat(data);
+  });
+},[]);
+
   //---------------------------add type ,Matricule ,mecaniciens,client---------------
   const [isOpen,SetIsopen]=useState(false);
   const [isOpenM,SetIsopenM]=useState(false);
@@ -76,24 +88,6 @@ const AddReparation : FC =(props:any)=> {
   const [isOpenC,SetIsopenC]=useState(false);
   const [isOpenCh,SetIsopenCh]=useState(false);
 
-  //------------------------------
-  
-  //------------------------
-  const handleChangeM = (event) => {
-    setMecanicien(event.target.value);
-  };
-  const handleChangeC = (event) => {
-    setClient(event.target.value);
-  };
-  const handleChangeCh= (event) => {
-    setChauffeur(event.target.value);
-  };
-  const handleChangeE= (event) => {
-    setEtat(event.target.value);
-  };
-  const [matricules,setMatricules] = useState([]);
-
-//---------------------------------------------------
   return (
     <>  
       <Container >
@@ -122,9 +116,9 @@ const AddReparation : FC =(props:any)=> {
                       label="Type"
                       helperText="Please select your type"
                     >
-                      {types.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
+                      {type.map((ty) => (
+                        <MenuItem key={ty.TypeID} value={ty.NameTypeReparation}>
+                          {ty.NameTypeReparation}
                         </MenuItem>
                       ))}
                     </TextField>
@@ -159,13 +153,12 @@ const AddReparation : FC =(props:any)=> {
                       id="select-mecanicien"
                       select
                       label="Mécaniciens"
-                      value={mecanicien}
-                      onChange={handleChangeM}
+                      
                       helperText="Please select your Mécaniciens"
                     >
-                      {mecaniciens.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
+                      {mecanicien.map((mec) => (
+                        <MenuItem key={mec.MecanicienID} value={mec.NameMecanicien}>
+                          {mec.NameMecanicien}
                         </MenuItem>
                       ))}
                     </TextField>
@@ -212,13 +205,11 @@ const AddReparation : FC =(props:any)=> {
                       id="filled-select-type"
                       select
                       label="Client"
-                      value={client}
-                      onChange={handleChangeC}
                       helperText="Please select your Client"
                     >
-                      {types.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
+                      {client.map((cli) => (
+                        <MenuItem key={cli.ClientId} value={cli.Identification}>
+                          {cli.Identification}
                         </MenuItem>
                       ))}
                     </TextField>
@@ -274,10 +265,10 @@ const AddReparation : FC =(props:any)=> {
                       id="select-Matricule"
                       select
                       label="Matricule"
-                      onChange={props.setMatricules}
-                      helperText="Please select your Matricule">
-                      {props.matricules.map((matricule) => (
-                        <MenuItem key={matricule.id} value={matricule.numero}>
+                      helperText="Please select your Matricule"                    >
+                      {matricule.map((mat) => (
+                        <MenuItem key={mat.id} value={mat.NumeroMatricule}>
+                          {mat.NumeroMatricule}
                         </MenuItem>
                       ))}
                     </TextField>
@@ -291,7 +282,7 @@ const AddReparation : FC =(props:any)=> {
                        <TextField
                           id="Add Matricule"
                           helperText="Please Saisir Matricule">                   
-                         </TextField>
+                    </TextField>
                        </div>
                       <div>
                       <Button variant="contained"  color="error" sx={{ margin: 2}} onClick={()=>SetIsopenM(false)}>
@@ -308,12 +299,10 @@ const AddReparation : FC =(props:any)=> {
                       id="select-Chauffeur"
                       select
                       label="Chauffeur"
-                      value={chauffeur}
-                      onChange={handleChangeCh}
                       helperText="Please select your Chauffeur"                    >
-                      {types.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
+                      {chauf.map((chau) => (
+                        <MenuItem key={chau.ChauffeurId} value={chau.NomChauffeur}>
+                          {chau.NomChauffeur}
                         </MenuItem>
                       ))}
                     </TextField>
@@ -363,6 +352,15 @@ const AddReparation : FC =(props:any)=> {
                        </AddChauffeur>
                         {/*      -------------        */ }
                                  {/* -----  IconButton------------ */}
+                      <TextField
+                      id="saisir-KM"
+                      label="KM"
+                      helperText="Please Saisir KM" 
+                      style={{
+                        width: '20ch',
+                      }} 
+                      >
+                      </TextField>
                   </div>
                   </Box>
                   <Box
@@ -372,19 +370,13 @@ const AddReparation : FC =(props:any)=> {
                      }
                   } >
                   <div>
-                  <TextField
-                      id="saisir-KM"
-                      label="KM"
-                      helperText="Please Saisir KM" 
-                      style={{
-                        width: '40ch',
-                      }} 
-                      >                   
-                    </TextField>
                     <TextField
                       id="saisir-Details"
-                      label="Détails"
-                      helperText="Please Saisir Détails" >                   
+                      label="Etat Initial Avant Reparation"
+                      helperText="Please Saisir Etat Initial " 
+                      style={{
+                        width: '90ch',
+                      }} >                   
                     </TextField>
                   </div>
                   </Box>  
@@ -398,8 +390,8 @@ const AddReparation : FC =(props:any)=> {
                    
                   <TextField
                       id="Description"
-                      label="Description"
-                      helperText="Description" 
+                      label="Operation Effectuee"
+                      helperText="Operation Effectuee" 
                       rows={5}
                       multiline        
                       style={{
@@ -412,13 +404,11 @@ const AddReparation : FC =(props:any)=> {
                       id="select-Etat"
                       select
                       label="Etat"
-                      value={etat}
-                      onChange={handleChangeE}
                       helperText="Please select your Etat"
                         >
-                      {etats.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
+                      {etat.map((eta) => (
+                        <MenuItem key={eta.EtatID} value={eta.NomEtat}>
+                          {eta.NomEtat}
                         </MenuItem>
                       ))}
                     </TextField>

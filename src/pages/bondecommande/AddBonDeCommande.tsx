@@ -117,6 +117,11 @@ return(
                           label="Quantite"
                           helperText="Please Saisir Quantite">                   
                         </TextField>
+                        <TextField
+                          id="FourId"
+                          label="Fournisseur"
+                          helperText="Please Saisir Fournisseur">                   
+                        </TextField>
                        </div>
                       <div style={{
                             display: 'flex',
