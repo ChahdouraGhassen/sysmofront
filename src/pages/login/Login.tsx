@@ -25,23 +25,23 @@ function Login() {
   };
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
-    <div className="App">
-          <img className='img' src={Logo} width= "25%" alt=''/>
-     <div className='card'>
-     <h4>Connectez-vous pour démarrer votre session</h4>
-     <input className='input' type='email'  required />
-     <input className='input' type='password' required />
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-          Welcome
-        </Alert>
-      </Snackbar>
-      <Link to='AddReparation'>
-     <button className='btn-connexion'  onClick={handleClick}>S'identifier</button>
-     </Link>
-     </div>
-     </div>
-     </Stack>
+      <div className="App">
+        <img className='img' src={Logo} width="25%" alt='' />
+        <div className='card'>
+          <h4>Connectez-vous pour démarrer votre session</h4>
+          <input className='input' type='email' required />
+          <input className='input' type='password' required />
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+              Welcome
+            </Alert>
+          </Snackbar>
+          <Link to='AddReparation'>
+            <button className='btn-connexion' onClick={handleClick}>S'identifier</button>
+          </Link>
+        </div>
+      </div>
+    </Stack>
   );
 }
 export default Login;

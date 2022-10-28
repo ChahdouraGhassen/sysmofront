@@ -1,4 +1,3 @@
-import react from 'react';
 import {
   Box,
   styled,
@@ -35,29 +34,29 @@ function Sidebar() {
           position: 'fixed',
           left: 0,
           top: 0,
-          background:'#D22924',
+          background: '#D22924',
         }}
       >
-          <Box
-          width={'100%'} 
+        <Box
+          width={'100%'}
           height={'20%'}>
-              <img src={Logo} width="100%" alt=''/>
-          </Box>
-          <Divider
-            sx={{
-              mt: theme.spacing(1),
-              mx: theme.spacing(2),
-              background: theme.colors.alpha.trueWhite[30]
-            }}
-          />
-          <SidebarMenu />
+          <img src={Logo} width="100%" alt='' />
+        </Box>
+        <Divider
+          sx={{
+            mt: theme.spacing(1),
+            mx: theme.spacing(2),
+            background: theme.colors.alpha.trueWhite[30]
+          }}
+        />
+        <SidebarMenu />
         <Divider
           sx={{
             background: theme.colors.alpha.trueWhite[10]
           }}
         />
       </SidebarWrapper>
-      
+
     </>
   );
 }

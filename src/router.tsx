@@ -1,20 +1,25 @@
-import { Navigate,RouteObject } from 'react-router-dom';
-import { lazy } from 'react';
-const NavBar =lazy(()=>import('./SideBarLayout'));
-const AddReparation=lazy(()=>import('./pages/reparation/AddReparation')); 
-const AddBonDeTravail=lazy(()=>import('./pages/workorder/AddBonDeTravail')); 
-const AddBonDeCommande=lazy(()=>import('./features/commandeorder/AddCommandeOrder')); 
-const Reparation=lazy(()=>import('./pages/reparation/Reparation')); 
-const BonDeTravil=lazy(()=>import('./pages/workorder/BonDeTravail')); 
-const Login=lazy(()=>import('./pages/login/Login')); 
-const CommandeOrders=lazy(()=>import('./features/commandeorder/CommandeOrders')); 
-const WorkOrders=lazy(()=>import('./features/workorder/WorkOrders')); 
-
+import { RouteObject } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
+import SuspenseLoader from './pages/SuspenseLoader';
+const Loader = (Component) => (props) =>
+(
+  <Suspense fallback={<SuspenseLoader />}>
+    <Component {...props} />
+  </Suspense>
+);
+const NavBar = Loader(lazy(() => import('./SideBarLayout')));
+const AddReparation = Loader(lazy(() => import('./pages/reparation/AddReparation')));
+const AddBonDeTravail = Loader(lazy(() => import('./pages/workorder/AddBonDeTravail')));
+const AddBonDeCommande = Loader(lazy(() => import('./pages/bondecommande/AddBonDeCommande')));
+const Reparation = Loader(lazy(() => import('./pages/reparation/Reparations')));
+const BonDeTravil = Loader(lazy(() => import('./pages/workorder/BonDeTravail')));
+const Login = Loader(lazy(() => import('./pages/login/Login')));
+const BonDeCommande = Loader(lazy(() => import('./pages/bondecommande/BonDeCommande')));
 
 const routes: RouteObject[] = [
   {
-   path:'',
-   element:<Login />,
+    path: '',
+    element: <Login />,
   },
   {
     path: '/',
@@ -34,7 +39,7 @@ const routes: RouteObject[] = [
       },
       {
         path: 'GererBonDeTravail',
-        element: <WorkOrders />
+        element: <BonDeTravil />
       },
       {
         path: 'AddBonDeTravail',
@@ -42,7 +47,7 @@ const routes: RouteObject[] = [
       },
       {
         path: 'GererBonDeCommande',
-        element: <CommandeOrders />
+        element: <BonDeCommande />
       },
       {
         path: 'AddBonDeCommande',

@@ -17,7 +17,7 @@ bottom:0,
 backgroundColor:'rgba(0,0,0,.7)',
 zIndex:1000
 }as React.CSSProperties;
-function AddPiece( {open,children}) {
+function AddFournisseur( {open,children}) {
     if(!open) return null
   return (
     <>
@@ -29,4 +29,4 @@ function AddPiece( {open,children}) {
   )
 }
 
-export default AddPiece
+export default AddFournisseur
