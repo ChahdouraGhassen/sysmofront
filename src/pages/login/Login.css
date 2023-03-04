@@ -1,50 +1,70 @@
-.App {
-  background-color: #CD0F09;
-  position: absolute;
-  height: 100%;
-  width: 100%;
+.containers {
+  margin-top: 11% !important;
+  margin-left: 11%;
+}
+
+.register-left {
   text-align: center;
+  color: #000000;
+  padding: 30px;
 }
 
-.card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  width: 60%;
-  height: 60%;
-  margin-left: auto;
-  margin-right: auto;
+.register-left img {
+  margin-top: 50px;
+  margin-bottom: 18px;
+  width: 80%;
+}
+
+.register-left p {
+  padding: 20px 20px 0;
+}
+
+.register-left .btn-primary {
+  border-radius: 1.5rem;
+  border: none;
+  width: 120px;
+  background: #030202;
+  font-weight: 600;
+  color: #ffffff;
+  margin-top: 20px;
+  padding: 10px;
+}
+
+.register-left .btn-primary:hover {
+  background: #000;
+}
+
+.register-right {
+  border: none;
+  background: #CD0F09;
+  border-top-left-radius: 5% 5% ;
+  border-bottom-left-radius: 5% 5%;
+  border-top-right-radius:5% 5%;
+  border-bottom-right-radius: 5% 5%;
+  padding: 60px;
+}
+
+.register-right h2 {
   text-align: center;
-  border-radius: 18px;
+  margin-bottom: 11%;
+  color: #131212;
 }
 
-.input {
-  width: 60%;
-  height: 40px;
-  margin: 50px;
-  margin-left: auto;
-  margin-right: auto;
-  font-size: 13px;
+.register-form {
+  padding: 30px;
+}
+
+.register-right .btn-primary {
+  float: right;
+  border-radius: 1.5rem;
   border: none;
-  font-family: 'Montserrat', sans-serif;
-  background-color: #d1d1d157;
-  border-radius: 8px;
+  width: 120px;
+  background: #0a0808;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 11%;
+  padding: 10px;
 }
-
-.btn-connexion {
-  width: 180px;
-  height: 50px;
-  margin-left: auto;
-  margin-right: auto;
-  border-radius: 25px;
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 1.15px;
-  background-color: #ED1B24;
-  color: #f9f9f9;
-  box-shadow: 8px 8px 16px #d1d9e6, -8px -8px 16px #f9f9f9;
-  border: none;
-  outline: none;
-}
-
-h4 {
-  margin-top: 15px;
+.register-right .btn-primary:hover {
+  background: #000000;
 }

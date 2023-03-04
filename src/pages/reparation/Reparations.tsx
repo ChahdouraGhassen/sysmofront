@@ -1,110 +1,124 @@
-import { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   Container,
   Grid,
   Divider,
+  IconButton
 } from '@mui/material';
 import { Trash, Printer } from 'react-bootstrap-icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content';
-import ReactToPrint from 'react-to-print';
-import { InterventionPrint } from '../../print/InterventionPrint';
-class Reparations extends Component<any, any>{
-  componentRef = null;
-  constructor(props: any) {
-    super(props);
-    this.state = { reps: [] }
-  }
-  MySwal = withReactContent(Swal)
 
-  refreshList() {
+function Reparations() {
+  const [reps, setReps] = useState([]);
+  const navigate = useNavigate();
+  useEffect(() => {
+    refreshList();
+  }, []);
+
+  const refreshList = () => {
     fetch('https://localhost:44339/api/reparation')
       .then(response => response.json())
       .then(data => {
-        this.setState({ reps: data });
+        setReps(data);
       })
   }
-  componentDidMount() {
-    this.refreshList();
-  }
-  componentDidUpdate() {
-    this.refreshList();
-  }
-  DeleteReparation = (ReparationID, e) => {
+  const DeleteReparation = (ReparationID, e) => {
     e.preventDefault();
     const id = ReparationID;
-    Axios.delete('https://localhost:44339/api/reparation/' + id).then(res => (
-      this.MySwal.fire({
-        title: <strong>Deleted Successfully</strong>,
-        confirmButtonText:
-          <div>
-            <ReactToPrint
-              trigger={() => {
-                return <a href="#">Print this out!</a>;
-              }}
-              content={() => this.componentRef}
-            />
-            <InterventionPrint ref={el => (this.componentRef = el)} />
-          </div>,
-      }))).catch(err => console.log(err))
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger'
+      },
+      buttonsStyling: false
+    })
+
+    swalWithBootstrapButtons.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Axios.delete('https://localhost:44339/api/reparation/' + id)
+        swalWithBootstrapButtons.fire(
+          'Deleted!',
+          'Your file has been deleted.',
+          'success'
+        )
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire(
+          'Cancelled',
+          'Your imaginary file is safe :)',
+          'error'
+        )
+      }
+    })
+      .catch(err => console.log(err))
   }
-  render() {
-    const { reps } = this.state;
-    return (
-      <Container>
-        <Grid>
-          <Grid
-            container
-            sx={
-              {
-                m: 2
-              }
-            }
-          >
-            <Link to='/AddReparation'>
-              <Button variant="contained" color="error" sx={
-                {
-                  m: 2
-                }
-              }  >
-                Ajouter Réparation
-              </Button>
-            </Link>
-            <Divider />
-            <table className="table">
-              <thead><tr>
-                <th className="table-warning">Date</th>
-                <th className="table-danger">Type</th>
-                <th className="table-primary">Mécaniciens</th>
+
+  const PrintFunction = (Datee, TypeRepar, Datefin, Client, Matricule, Chauffeur, RepDescription, EtatInitial, KM, e) => {
+    e.preventDefault();
+    navigate("/Print", { state: { Datee, TypeRepar, Datefin, Client, Matricule, Chauffeur, RepDescription, EtatInitial, KM } });
+  }
+  return (
+    <Container>
+      <Grid>
+        <Grid
+          container
+          sx={{
+            m: 2
+          }}
+        >
+          <Link to='/AddReparation'>
+            <Button variant="contained" color="error" sx={{
+              m: 2
+            }}>
+              Ajouter Réparation
+            </Button>
+          </Link>
+          <Divider />
+          <table className="table">
+            <thead>
+              <tr style={{ textAlign: "center" }}>
+                <th className="table-warning">Date Début</th>
+                <th className="table-danger">Date de Fin</th>
+                <th className="table-primary">Type Réparation</th>
                 <th className="table-secondary">Clients</th>
                 <th className="table-success">Matricules</th>
                 <th className="table-warning">Chauffeur</th>
                 <th className="table-info">Actions</th>
               </tr>
-              </thead>
-              <tbody>
-                {reps.map(rep =>
-                  <tr key={rep.ReparationID}>
-                    <td>{rep.Datee}</td>
-                    <td>{rep.TypeRepar}</td>
-                    <td>{rep.Mecanicien}</td>
-                    <td>{rep.Client}</td>
-                    <td>{rep.Matricule}</td>
-                    <td>{rep.Chauffeur}</td>
-                    <td><button className="btn btn-danger" onClick={(e) => this.DeleteReparation(rep.ReparationID, e)} ><Trash /></button>
-                      <button className='btn btn-success'> <Printer /> </button>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </Grid>
+            </thead>
+            <tbody style={{ textAlign: "center" }}>
+              {reps.map(rep =>
+                <tr key={rep.ReparationID}>
+                  <td>{rep.Datee}</td>
+                  <td>{rep.Datefin}</td>
+                  <td>{rep.TypeRepar}</td>
+                  <td>{rep.Client}</td>
+                  <td>{rep.Matricule}</td>
+                  <td>{rep.Chauffeur}</td>
+                  <td>
+                    <IconButton color="error" onClick={(e) => DeleteReparation(rep.ReparationID, e)} ><Trash /></IconButton>
+                    <IconButton color="primary" onClick={(e) => PrintFunction(rep.Datee, rep.TypeRepar, rep.Datefin, rep.Client, rep.Matricule, rep.Chauffeur, rep.EtatInitial, rep.RepDescription, rep.KM, e)}> <Printer /> </IconButton>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </Grid>
-      </Container>
-    )
-  }
+      </Grid>
+    </Container>
+  )
 }
 export default Reparations;

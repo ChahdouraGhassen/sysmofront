@@ -1,5 +1,5 @@
 //---------------------- import ----------------------------
-import React, { FC, useEffect, useState, useRef } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import {
   Button,
   Container,
@@ -20,12 +20,10 @@ import MenuItem from '@mui/material/MenuItem';
 import AddIcon from '@mui/icons-material/Add';
 import Axios from 'axios';
 import { Printer } from 'react-bootstrap-icons';
-import ReactToPrint from 'react-to-print';
 import { v4 as uuidv4 } from 'uuid';
 //----------------------import pages---------------------------
 import AddPiece from './modal/AddPiece';
 import AddFournisseur from './modal/AddFournisseur';
-import { InterventionPrint } from '../../print/InterventionPrint';
 //sweet alert 2
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -48,12 +46,13 @@ const AddBonDeCommande: FC = () => {
   const [piece, setPiece] = useState([])
   const [prixt, setPrixT] = useState('')
   const [totales, setTotales] = useState(0)
-  //-----------Print 
-  const componentRef = useRef(null);
-  //------------------
   //-----------liste 
   const [list, setList] = useState([])
   const [isEditing, setIsEditing] = useState(false)
+  const [nomp, setNomP] = useState('')
+  const [fournisseurl, setFournisseurL] = useState('')
+  const [quantitel, setQuantiteL] = useState('')
+  const [prixl, setPrixL] = useState('')
   useEffect(() => {
     fetch('https://localhost:44339/api/piece')
       .then(response => response.json())
@@ -112,11 +111,12 @@ const AddBonDeCommande: FC = () => {
   const HandlePoste = (e) => {
     e.preventDefault();
     Axios.post('https://localhost:44339/api/commande', {
-      NomPiece: pic,
-      Fournisseur: fourr,
-      Qte: qtt,
-      Prix: prixx
-    }).then(res => (setPic(""), setFourr(""), setQtt(""), setPrixx(""),
+      NomPiece: nomp,
+      Fournisseur: fournisseurl,
+      Qte: quantitel,
+      Prix: totales
+    }).then(res => (setPic(""), setFourr(""), setList([]), setPrixx(""), setTotales(0),
+      console.log(list),
       MySwal.fire({
         title: <strong>Added Successfully</strong>,
         confirmButtonText:
@@ -130,21 +130,29 @@ const AddBonDeCommande: FC = () => {
   //------------------------
   const HandleSubmit = (e) => {
     e.preventDefault();
-    const newItems = {
-      id: uuidv4(),
-      pic,
-      fourr,
-      prixx,
-      qtt,
-      prixt
+    if (!pic || !fourr || !prixx || !qtt) {
+      Swal.fire(
+        'The Internet?',
+        'That thing is still around?',
+        'question'
+      )
+    } else {
+      const newItems = {
+        id: uuidv4(),
+        pic,
+        fourr,
+        prixx,
+        qtt,
+        prixt
+      }
+      setPic("")
+      setFourr("")
+      setPrixx("")
+      setQtt("")
+      setPrixT("")
+      setList([...list, newItems])
+      setIsEditing(false)
     }
-    setPic("")
-    setFourr("")
-    setPrixx("")
-    setQtt("")
-    setPrixT("")
-    setList([...list, newItems])
-    setIsEditing(false)
   }
   //-----------------delete row
   const DeleteRow = (id) => {
@@ -174,6 +182,46 @@ const AddBonDeCommande: FC = () => {
 
   }, [prixt, prixx, qtt, setPrixT])
   //-----------------function calculate totale table
+  useEffect(() => {
+    let rows = (document.querySelectorAll(".prixtotale")) as any
+    let sum = 0
+    for (let i = 0; i < rows.length; i++) {
+      sum += isNaN(rows[i].innerHTML) ? 0 : parseInt(rows[i].innerHTML)
+      setTotales(sum)
+    }
+  })
+  useEffect(() => {
+    let rows = (document.querySelectorAll(".pieceliste")) as any
+    let sum = ""
+    for (let i = 0; i < rows.length; i++) {
+      sum += "," + rows[i].innerHTML
+      setNomP(sum)
+    }
+  })
+  useEffect(() => {
+    let rows = (document.querySelectorAll(".fournisseurliste")) as any
+    let sum = ""
+    for (let i = 0; i < rows.length; i++) {
+      sum += "," + rows[i].innerHTML
+      setFournisseurL(sum)
+    }
+  })
+  useEffect(() => {
+    let rows = (document.querySelectorAll(".quantite")) as any
+    let sum = ""
+    for (let i = 0; i < rows.length; i++) {
+      sum += "," + rows[i].innerHTML
+      setQuantiteL(sum)
+    }
+  })
+  useEffect(() => {
+    let rows = (document.querySelectorAll(".prixliste")) as any
+    let sum = ""
+    for (let i = 0; i < rows.length; i++) {
+      sum += "," + rows[i].innerHTML
+      setPrixL(sum)
+    }
+  })
 
   return (
     <>
@@ -197,7 +245,6 @@ const AddBonDeCommande: FC = () => {
                   sx={{
                     '& .MuiTextField-root': { m: 1, width: '30ch' }
                   }}
-
                 >
                   <div>
                     <TextField
@@ -229,8 +276,6 @@ const AddBonDeCommande: FC = () => {
                           onChange={(e) => setPiec(e.target.value)}
                         >
                         </TextField>
-                      </div>
-                      <div >
                         <TextField
                           id="AddQte"
                           label="Quantite"
@@ -255,6 +300,12 @@ const AddBonDeCommande: FC = () => {
                           onChange={(e) => setPrix(e.target.value)}
                         >
                         </TextField>
+                      </div>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
                       </div>
                       <div style={{
                         display: 'flex',
@@ -397,21 +448,35 @@ const AddBonDeCommande: FC = () => {
                       {list.map((list) => (
                         <React.Fragment key={list.id}>
                           <tr >
-                            <td>{list.pic}</td>
-                            <td>{list.fourr}</td>
-                            <td>{list.prixx}</td>
-                            <td>{list.qtt}</td>
+                            <td className='pieceliste'>{list.pic}</td>
+                            <td className='fournisseurliste'>{list.fourr}</td>
+                            <td className='prixliste'>{list.prixx}</td>
+                            <td className="quantite">{list.qtt}</td>
                             <td className="prixtotale">{list.prixt}</td>
                             <td>
-                              <Button color="error" onClick={() => DeleteRow(list.id)}><AiOutlineDelete /></Button>
-                              <Button color="success" onClick={() => editRow(list.id)}> <AiOutlineEdit /> </Button>
+                              <IconButton color="error" onClick={() => DeleteRow(list.id)}><AiOutlineDelete /></IconButton>
+                              <IconButton color="success" onClick={() => editRow(list.id)}> <AiOutlineEdit /> </IconButton>
                             </td>
                           </tr>
                         </React.Fragment>
                       ))}
                     </tbody>
                   </table>
-
+                  <div>
+                    <TextField
+                      id="Somme Totale"
+                      type="number"
+                      disabled
+                      value={totales}
+                      helperText="Somme Totale (TND)"
+                      style={{
+                        width: "20ch",
+                        marginTop: "15%"
+                      }}
+                    >
+                      {totales}
+                    </TextField>
+                  </div>
                 </Box>
                 <Button variant="contained" sx={{ mx: 100, width: 180 }} color="error" onClick={HandlePoste}>
                   Ajouter Commande

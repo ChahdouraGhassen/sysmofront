@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 //-------------------import pages ---------------------
 import SidebarMenu from './SidebarMenu';
-import Logo from '../../images/profil-sysmo.png';
+import Logo from '../../images/sysmo.jpg';
 //--------------------------------------------------------
 const SidebarWrapper = styled(Box)(
   ({ theme }) => `
@@ -22,9 +22,8 @@ const SidebarWrapper = styled(Box)(
 //------------------------------------------------------------
 function Sidebar() {
   const theme = useTheme();
-
   return (
-    <>
+    <div >
       <SidebarWrapper
         sx={{
           display: {
@@ -34,13 +33,14 @@ function Sidebar() {
           position: 'fixed',
           left: 0,
           top: 0,
-          background: '#D22924',
+          background: 'linear-gradient(to right, #000000, #CD0F09);',
         }}
       >
         <Box
-          width={'100%'}
-          height={'20%'}>
-          <img src={Logo} width="100%" alt='' />
+          marginTop={'5%'}
+          marginLeft={'18%'}
+          >
+          <img src={Logo} width="70%" height="70%" alt='error' />
         </Box>
         <Divider
           sx={{
@@ -57,7 +57,7 @@ function Sidebar() {
         />
       </SidebarWrapper>
 
-    </>
+    </div>
   );
 }
 

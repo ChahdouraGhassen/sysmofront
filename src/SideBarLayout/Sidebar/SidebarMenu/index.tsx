@@ -62,11 +62,11 @@ const SubMenuWrapper = styled(Box)(
       }
     }
 `
-//----------------------------------------------------
+  //----------------------------------------------------
 );
 function SidebarMenu() {
   return (
-    <>
+    <div >
       <MenuWrapper>
         <List
           component="div"
@@ -118,8 +118,8 @@ function SidebarMenu() {
                   to="GererBonDeTravail"
                   startIcon={<TableChartTwoToneIcon />}
                 >
-                  Gérer Bon De Travail           
-                 </Button>
+                  Gérer Bon De Travail
+                </Button>
               </ListItem>
               <ListItem component="div">
                 <Button
@@ -171,7 +171,7 @@ function SidebarMenu() {
           component="div"
           subheader={
             <ListSubheader component="div" disableSticky>
-              Settings
+              Facture
             </ListSubheader>
           }
         >
@@ -181,17 +181,27 @@ function SidebarMenu() {
                 <Button
                   disableRipple
                   component={RouterLink}
-                  to="AccountSettings"
+                  to="Bonlivraison"
                   startIcon={<AccountCircleTwoToneIcon />}
                 >
-                  Account Settings
+                  Bon De Livraison
+                </Button>
+              </ListItem>
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  to="facture"
+                  startIcon={<AccountCircleTwoToneIcon />}
+                >
+                  Facture
                 </Button>
               </ListItem>
             </List>
           </SubMenuWrapper>
         </List>
       </MenuWrapper>
-    </>
+    </div>
   );
 }
 

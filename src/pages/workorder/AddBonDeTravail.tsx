@@ -8,11 +8,11 @@ import {
   CardHeader,
   CardContent,
   Divider,
-  SelectChangeEvent
+  IconButton
 } from '@mui/material';
 import {
-AiOutlineDelete,
-AiOutlineEdit
+  AiOutlineDelete,
+  AiOutlineEdit
 } from 'react-icons/ai'
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -40,7 +40,6 @@ const AddBonDeTravail: FC = () => {
       .then(response => response.json())
       .then(data => {
         setChauf(data);
-
       });
   }, []);
   const [matricule, setMatricule] = useState([])
@@ -101,16 +100,25 @@ const AddBonDeTravail: FC = () => {
   }
   const HandleSubmit = (e) => {
     e.preventDefault();
-    const newItems = {
-      id: uuidv4(),
-      tach,
-      meca,
-      piec
+    if (!tach || !meca || !piec) {
+      Swal.fire(
+        'The Internet?',
+        'That thing is still around?',
+        'question'
+      )
     }
-    setTach("")
-    setMeca("")
-    setPiec("")
-    setList([...list, newItems])
+    else {
+      const newItems = {
+        id: uuidv4(),
+        tach,
+        meca,
+        piec
+      }
+      setTach("")
+      setMeca("")
+      setPiec("")
+      setList([...list, newItems])
+    }
   }
   //-----------------delete row
   const DeleteRow = (id) => {
@@ -243,8 +251,8 @@ const AddBonDeTravail: FC = () => {
                             <td>{list.meca}</td>
                             <td>{list.piec}</td>
                             <td>
-                              <Button color="error" onClick={() => DeleteRow(list.id)}><AiOutlineDelete /></Button>
-                              <Button color="success" onClick={() => editRow(list.id)}> <AiOutlineEdit /> </Button>
+                              <IconButton color="error" onClick={() => DeleteRow(list.id)}><AiOutlineDelete /></IconButton>
+                              <IconButton color="success" onClick={() => editRow(list.id)}> <AiOutlineEdit /> </IconButton>
                             </td>
                           </tr>
                         </React.Fragment>

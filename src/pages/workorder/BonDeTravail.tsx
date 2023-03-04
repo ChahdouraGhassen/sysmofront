@@ -4,6 +4,7 @@ import {
   Container,
   Grid,
   Divider,
+  IconButton
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Trash, Printer } from 'react-bootstrap-icons';
@@ -62,16 +63,17 @@ class BonDetravil extends Component<any, any>{
             </Link>
             <Divider />
             <table className="table">
-              <thead><tr>
-                <th className="table-danger">Matricule</th>
-                <th className="table-primary">Chauffeur</th>
-                <th className="table-secondary">Mécaniciens</th>
-                <th className="table-success">Pièces</th>
-                <th className="table-warning">Taches</th>
-                <th className="table-info">Actions</th>
-              </tr>
+              <thead>
+                <tr style={{ textAlign: "center" }}>
+                  <th className="table-danger">Matricule</th>
+                  <th className="table-primary">Chauffeur</th>
+                  <th className="table-secondary">Mécaniciens</th>
+                  <th className="table-success">Pièces</th>
+                  <th className="table-warning">Taches</th>
+                  <th className="table-info">Actions</th>
+                </tr>
               </thead>
-              <tbody>
+              <tbody style={{ textAlign: "center" }}>
                 {travail.map(trav =>
                   <tr key={trav.TravailID}>
                     <td>{trav.Matricule}</td>
@@ -79,8 +81,9 @@ class BonDetravil extends Component<any, any>{
                     <td>{trav.Mecanicien}</td>
                     <td>{trav.Pieces}</td>
                     <td>{trav.Tache}</td>
-                    <td><button className="btn btn-danger" onClick={(e) => this.DeleteReparation(trav.TravailID, e)} ><Trash /></button>
-                      <button className='btn btn-success'> <Printer /> </button> </td>
+                    <td>
+                      <IconButton color="error" onClick={(e) => this.DeleteReparation(trav.TravailID, e)} ><Trash /></IconButton>
+                      <IconButton color="primary"> <Printer /> </IconButton> </td>
                   </tr>
                 )}
               </tbody>
